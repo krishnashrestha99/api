@@ -90,13 +90,23 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $product->update([
+               'name' => $request->name,
+               'detail' => $request->description,
+               'stock' => $request->stock,
+               'price' => $request->price,
+               'discount' => $request->discount,
+        ]);
+
+        return response([
+             'data' => new ProductResource($product)
+        ], Response::HTTP_ACCEPTED);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Product  $product
+     * @param  \App\Model\request  $product
      * @return \Illuminate\Http\Response
      */
     public function destroy(Product $product)
