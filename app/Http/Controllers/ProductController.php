@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductResource;
 use App\Model\Product;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
+
+    Public function __construct()
+    {
+        $this->middleware('auth:api')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +43,20 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+       $product =  Product::create([
+
+                'name' => $request->name,
+                'detail' => $request->description,
+                'stock' => $request->stock,
+                'price' => $request->price,
+                'discount' => $request->discount,
+        ]);
+
+       return response([
+            'data' => new ProductResource($product)
+       ], Response::HTTP_ACCEPTED);
     }
 
     /**
